@@ -1,0 +1,39 @@
+spring:
+  docker:
+    compose:
+      skip:
+        in-tests: false
+  kafka:
+    consumer:
+      auto-offset-reset: earliest
+      bootstrap-servers: localhost:29092
+      enable-auto-commit: false
+      key-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "com.capitole.hotel.*"
+    producer:
+      acks: all
+      bootstrap-servers: localhost:29092
+      key-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      retries: 3
+      properties:
+        enable:
+          idempotence: true
+    request:
+      topic-search: hotel_availability_searches
+      topic-count: hotel_availability_count
+    reply:
+      topic-search: hotel_availability_searches_result
+      topic-count: hotel_availability_count_result
+    group:
+      search-id: search-group
+      count-id: count-group
+  data:
+    mongodb:
+      uri: mongodb://root:example@mongo:27017/hotel
+      auto-index-creation: true
